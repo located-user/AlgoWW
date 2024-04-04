@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votre Titre</title>
+    <style>
+        /* Style CSS */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        .field-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-wrap: wrap; /* Permet aux éléments de passer à la ligne lorsque la largeur est insuffisante */
+        }
+
+        .input-group input[type="number"] {
+            flex: 1;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            box-sizing: border-box; /* S'assure que la largeur des éléments inclut la largeur du bord */
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <form id="myForm" method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <div class="field-group">
+            <label for="id_NB">Nombre de périodes :</label>
+            <input type="number" id="id_NB" name="NB">
+        </div>
+        <div class="field-group">
+            <label for="id_taux_passation">Taux de passation :</label>
+            <input type="number" id="id_taux_passation" name="taux_passation">
+        </div>
+        <div class="field-group">
+            <label for="id_Cout_Commande">Coût de commande :</label>
+            <input type="number" id="id_Cout_Commande" name="Cout_Commande">
+        </div>
+        <div class="field-group">
+            <label>Periodes :</label>
+            <div class="input-group" id="periodes-container">
+                <!-- Ici seront générés dynamiquement les champs de saisie pour les périodes -->
+            </div>
+        </div>
+        <div class="field-group">
+            <label>Prix achat :</label>
+            <div class="input-group" id="prix-container">
+                <!-- Ici seront générés dynamiquement les champs de saisie pour les prix -->
+            </div>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<script>
+    // Fonction pour générer dynamiquement les champs de saisie en fonction du nombre de périodes
+    function generateInputFields() {
+        var nb = document.getElementById('id_NB').value;
+        var periodesContainer = document.getElementById('periodes-container');
+        var prixContainer = document.getElementById('prix-container');
+        periodesContainer.innerHTML = ''; // Nettoie le contenu précédent
+        prixContainer.innerHTML = ''; // Nettoie le contenu précédent
+
+        for (var i = 0; i < nb; i++) {
+            var periodeInput = document.createElement('input');
+            periodeInput.type = 'number';
+            periodeInput.name = 'p';
+            periodeInput.placeholder = 'Période ' + (i + 1);
+            periodesContainer.appendChild(periodeInput);
+
+            var prixInput = document.createElement('input');
+            prixInput.type = 'number';
+            prixInput.name = 'pr';
+            prixInput.placeholder = 'Prix ' + (i + 1);
+            prixContainer.appendChild(prixInput);
+        }
+
+        // Ajouter des champs vides pour compléter la ligne si le nombre de périodes n'est pas divisible par 5
+        var remainingFields = nb % 5 === 0 ? 0 : 5 - (nb % 5);
+        for (var j = 0; j < remainingFields; j++) {
+            var emptyField = document.createElement('input');
+            emptyField.type = 'number';
+            emptyField.style.visibility = 'hidden'; // Rend les champs vides invisibles
+            periodesContainer.appendChild(emptyField);
+
+            var emptyField2 = document.createElement('input');
+            emptyField2.type = 'number';
+            emptyField2.style.visibility = 'hidden'; // Rend les champs vides invisibles
+            prixContainer.appendChild(emptyField2);
+        }
+    }
+
+    // Appeler la fonction une première fois pour générer les champs initiaux
+    generateInputFields();
+
+    // Écouter les changements dans le champ NB pour régénérer les champs
+    document.getElementById('id_NB').addEventListener('input', generateInputFields);
+</script>
+
+</body>
+</html>

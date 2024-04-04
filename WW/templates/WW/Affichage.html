@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats de l'algorithme</title>
+    <style>
+        /* Votre style CSS ici */
+    </style>
+</head>
+<body>
+    <h1>Résultats de l'algorithme</h1>
+    <p>Le prix minimum est : {{ prix_min }}</p>
+    <p>Méthode utilisée :</p>
+    <ul>
+        {% for method in methode %}
+            <li>{{ method }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
